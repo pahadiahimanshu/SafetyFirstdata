@@ -29,7 +29,10 @@
         android:id="@+id/start"
         android:layout_above="@+id/stop"
         android:layout_alignLeft="@+id/upload"
-        android:layout_alignStart="@+id/upload" />
+        android:layout_alignStart="@+id/upload"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/buttonshape"
+        />
 
     <Spinner
         android:layout_width="wrap_content"
