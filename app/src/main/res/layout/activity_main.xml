@@ -11,7 +11,47 @@
     tools:context="com.safety.hss.safetyfirstdata.MainActivity">
 
     <TextView
-        android:text="Hello World!"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/description"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:id="@+id/start"
+        android:layout_above="@+id/stop"
+        android:layout_alignLeft="@+id/upload"
+        android:layout_alignStart="@+id/upload" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vehicleSpinner"
+        android:layout_above="@+id/start"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload"
+        android:id="@+id/upload"
+        android:layout_marginBottom="93dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        android:id="@+id/stop"
+        android:layout_above="@+id/upload"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
