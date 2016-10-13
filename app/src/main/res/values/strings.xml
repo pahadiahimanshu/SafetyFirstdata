@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Safety First data</string>
-    <string name="description">Whats up?</string>
+    <string name="description">Safety first data is a data collection application that collects the accelerometer data while you are on any transport.</string>
 </resources>

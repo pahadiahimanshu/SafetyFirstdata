@@ -16,13 +16,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Linking my layout file - checking git push
+        setContentView(R.layout.activity_main);
+
         mdesc = (TextView)findViewById(R.id.description);
         mStart = (Button)findViewById(R.id.start);
         mStop = (Button) findViewById(R.id.stop);
         mUpload = (Button) findViewById(R.id.upload);
 
-        // Linking my layout file - checking git push
-        setContentView(R.layout.activity_main);
+        mdesc.setText(R.string.description);
+
     }
 
     @Override
