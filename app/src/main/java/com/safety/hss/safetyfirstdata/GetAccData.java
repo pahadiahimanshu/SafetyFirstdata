@@ -3,6 +3,7 @@ package com.safety.hss.safetyfirstdata;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.util.Log;
 
 public class GetAccData extends IntentService {
 
@@ -13,17 +14,18 @@ public class GetAccData extends IntentService {
     private static final String EXTRA_PARAM1 = "com.safety.hss.safetyfirstdata.extra.PARAM1";
     private static final String EXTRA_PARAM2 = "com.safety.hss.safetyfirstdata.extra.PARAM2";
 
+
     public GetAccData() {
         super("GetAccData");
     }
 
     public static void startActionCollect(Context context, String param1, String param2) {
         Intent intent = new Intent(context, GetAccData.class);
-
         intent.setAction(ACTION_COLLECT);
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);
         context.startService(intent);
+        Log.e("DEBUG","Started");
     }
 
     public static void stopActionCollect(Context context, String param1, String param2) {
@@ -32,6 +34,7 @@ public class GetAccData extends IntentService {
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);
         context.startService(intent);
+        Log.e("DEBUG","Stopped");
     }
 
     @Override
