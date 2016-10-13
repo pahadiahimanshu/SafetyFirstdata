@@ -7,17 +7,23 @@ import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Struct;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     Button mStart;
     Button mStop;
     Button mUpload;
+    Spinner mVehicleSpinner;
 
     TextView mdesc,x,y,z,accuracy;
 
@@ -39,6 +45,32 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mUpload = (Button) findViewById(R.id.upload);
         mdesc.setText(R.string.description);
 
+        // spinner added to select vehicle
+        mVehicleSpinner = (Spinner)findViewById(R.id.vehicleSpinner);
+        List<String> vehicle = new ArrayList<String>();
+        vehicle.add("Car");
+        vehicle.add("Motorbike");
+        vehicle.add("Bus");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, vehicle);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mVehicleSpinner.setAdapter(dataAdapter);
+        // data adapter set
+
+        mVehicleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String item = adapterView.getItemAtPosition(i).toString();
+
+                // Showing selected spinner item
+                Toast.makeText(adapterView.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         mStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

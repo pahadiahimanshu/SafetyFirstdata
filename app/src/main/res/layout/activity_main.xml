@@ -89,4 +89,15 @@
         android:layout_marginTop="27dp"
         android:layout_below="@+id/zText"
         android:layout_centerHorizontal="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vehicleSpinner"
+        android:layout_above="@+id/stop"
+        android:layout_toStartOf="@+id/upload"
+        android:layout_marginBottom="37dp"
+        android:spinnerMode="dialog"
+        android:layout_alignRight="@+id/description"
+        android:layout_alignEnd="@+id/description" />
 </RelativeLayout>
