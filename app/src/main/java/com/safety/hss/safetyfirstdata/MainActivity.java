@@ -2,13 +2,24 @@ package com.safety.hss.safetyfirstdata;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    Button mStart;
+    Button mStop;
+    Button mUpload;
+
+    TextView mdesc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mdesc = (TextView)findViewById(R.id.description);
+        mStart = (Button)findViewById(R.id.start);
+        mStop = (Button) findViewById(R.id.stop);
+        mUpload = (Button) findViewById(R.id.upload);
 
         // Linking my layout file - checking git push
         setContentView(R.layout.activity_main);
@@ -18,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
