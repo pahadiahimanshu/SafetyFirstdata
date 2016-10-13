@@ -34,13 +34,6 @@
         android:background="@drawable/buttonshape"
         />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/vehicleSpinner"
-        android:layout_above="@+id/start"
-        android:layout_centerHorizontal="true" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
