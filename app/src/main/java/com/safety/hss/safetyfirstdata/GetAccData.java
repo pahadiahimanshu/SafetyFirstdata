@@ -34,7 +34,13 @@ public class GetAccData extends IntentService implements SensorEventListener {
             final String action = intent.getAction();
             if (ACTION_COLLECT.equals(action)) {
                 handleActionCollect();
-                while (started){}
+                while (started){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
             } else if (ACTION_STOP.equals(action)) {
                 handleActionStop();
             }
