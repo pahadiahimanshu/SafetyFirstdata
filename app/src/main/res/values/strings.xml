@@ -1,4 +1,27 @@
 <resources>
     <string name="app_name">Safety First data</string>
     <string name="description">Safety first data is a data collection application that collects the accelerometer data while you are on any transport.</string>
+    <string-array name="vehicles">
+        <item>Car</item>
+        <item>Bus</item>
+        <item>Motorbike</item>
+        <item>Train</item>
+        <item>Metro</item>
+        <item>Bicycle</item>
+        <item>Rickshaw</item>
+        <item>Scooter</item>
+        <item>Automatic Rickshaw</item>
+        <item>Skateboard</item>
+        <item>Segway</item>
+        <item>Electric Scooter</item>
+        <item>Swaveboard</item>
+        <item>Hoverboard</item>
+        <item>Blimp</item>
+        <item>Airplane</item>
+        <item>Helicopter</item>
+        <item>Rocket</item>
+        <item>Satellite</item>
+        <item>House with Balloons</item>
+        <item>UFO</item>
+    </string-array>
 </resources>

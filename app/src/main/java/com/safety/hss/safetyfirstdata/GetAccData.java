@@ -3,62 +3,68 @@ package com.safety.hss.safetyfirstdata;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
 
-public class GetAccData extends IntentService {
+import java.util.ArrayList;
+
+public class GetAccData extends IntentService implements SensorEventListener {
 
     private static final String ACTION_COLLECT = "com.safety.hss.safetyfirstdata.action.COLLECT";
     private static final String ACTION_STOP = "com.safety.hss.safetyfirstdata.action.STOP";
 
-
-    private static final String EXTRA_PARAM1 = "com.safety.hss.safetyfirstdata.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "com.safety.hss.safetyfirstdata.extra.PARAM2";
-
-
     public GetAccData() {
         super("GetAccData");
     }
+    public Sensor acc;
+    public SensorManager sm;
 
-    public static void startActionCollect(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, GetAccData.class);
-        intent.setAction(ACTION_COLLECT);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-        Log.e("DEBUG","Started");
-    }
+    public static ArrayList<Float[]> data = new ArrayList<Float[]>();
+    public static int currentAccuracy;
 
-    public static void stopActionCollect(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, GetAccData.class);
-        intent.setAction(ACTION_STOP);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-        Log.e("DEBUG","Stopped");
-    }
+    public static boolean started=false, finished = false;
+
 
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_COLLECT.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionCollect(param1, param2);
+                handleActionCollect();
             } else if (ACTION_STOP.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionStop(param1, param2);
+                handleActionStop();
             }
         }
     }
 
-    private void handleActionCollect(String param1, String param2) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void handleActionCollect() {
+        Log.d("AccData","Collect Called");
+        sm=(SensorManager)getSystemService(SENSOR_SERVICE);
+        acc=sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sm.registerListener(this,acc,SensorManager.SENSOR_DELAY_NORMAL);
     }
 
 
-    private void handleActionStop(String param1, String param2) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void handleActionStop() {
+        Log.d("AccData","Stop Called");
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if(started) {
+            Log.d("AccData", "OnSensorChanged");
+            Float[] temp = {sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2], currentAccuracy * 1.0f};
+            data.add(temp);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+        if(started) {
+            currentAccuracy = i;
+        }
     }
 }
