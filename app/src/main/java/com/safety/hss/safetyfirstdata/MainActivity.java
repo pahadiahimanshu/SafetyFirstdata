@@ -141,18 +141,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                             RequestParams params = new RequestParams();
                             try {
-                                params.put("myfile", file2);
+                                params.put("file", file2);
                             } catch(FileNotFoundException e) {}
 
                             AsyncHttpClient client = new AsyncHttpClient();
                             AsyncHttpResponseHandler responseHandler = new AsyncHttpResponseHandler() {
                                 @Override
                                 public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
-                                    Log.d("post",Integer.toString(responseBody.length));
-                                    if(responseBody.length==39)
+                                    Log.d("post","HTTP Response = "+new String(responseBody));
+                                    if(responseBody.length==8)
                                         Snackbar.make(mainView,"Upload Successful",Snackbar.LENGTH_LONG).show();
-                                    else if(responseBody.length==4)
-                                        Snackbar.make(mainView,"Upload Failed. File size too big.",Snackbar.LENGTH_LONG).show();
                                     else
                                         Snackbar.make(mainView,"Upload Error",Snackbar.LENGTH_LONG).show();
                                 }

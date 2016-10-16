@@ -62,7 +62,6 @@ public class GetAccData extends IntentService implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if(started) {
-            Log.d("AccData", "OnSensorChanged");
             Float[] temp = {sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2], currentAccuracy * 1.0f};
             data.add(temp);
         }
