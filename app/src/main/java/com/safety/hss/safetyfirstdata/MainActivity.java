@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     Intent intent = new Intent(MainActivity.this, GetAccData.class);
                     intent.setAction("com.safety.hss.safetyfirstdata.action.COLLECT");
                     startService(intent);
-                    Snackbar.make(view, "Accelerometer Log GetAccData.started.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, "Accelerometer Log Started.", Snackbar.LENGTH_LONG).show();
                 }else{
                     if(!GetAccData.finished)
                         Snackbar.make(view, "Already Started.", Snackbar.LENGTH_LONG).show();
