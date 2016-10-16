@@ -26,17 +26,31 @@ public class GetAccData extends IntentService implements SensorEventListener {
     public static int currentAccuracy;
 
     public static boolean started=false, finished = false;
+    private boolean conti = true;
 
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_COLLECT.equals(action)) {
-                handleActionCollect();
-            } else if (ACTION_STOP.equals(action)) {
-                handleActionStop();
+        while(conti)
+        {
+            Log.d("AccData","Continue boolean = "+conti);
+            if (intent != null) {
+                final String action = intent.getAction();
+                if (ACTION_COLLECT.equals(action) && conti == true) {
+                    handleActionCollect();
+                } else if (ACTION_STOP.equals(action)) {
+                    conti = false;
+                    handleActionStop();
+                }
             }
+            Log.v("AccData", "Sleeping 1 sec");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Log.v("AccData", "couldn't sleep");
+                e.printStackTrace();
+            }
+            Log.v("AccData", "Woke up");
         }
     }
 
