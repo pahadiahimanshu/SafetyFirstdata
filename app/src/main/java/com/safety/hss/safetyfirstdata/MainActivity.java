@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
     private String vehicleName;
-    View mainView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +77,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!GetAccData.started && !GetAccData.finished) {
-                    mainView = view;
+                if(!GetAccData.started && !GetAccData.finished && GetAccData.uploaded && GetAccData.successful) {
                     GetAccData.started = true;
                     GetAccData.finished = false;
+                    GetAccData.uploaded = false;
                     Intent intent = new Intent(MainActivity.this, GetAccData.class);
                     intent.setAction("com.safety.hss.safetyfirstdata.action.COLLECT");
                     startService(intent);
@@ -97,13 +96,33 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(GetAccData.started) {
+                if(GetAccData.started && !GetAccData.finished && !GetAccData.uploaded) {
                     GetAccData.started = false;
                     GetAccData.finished = true;
-                    Intent intent = new Intent(MainActivity.this, GetAccData.class);
-                    intent.setAction("com.safety.hss.safetyfirstdata.action.STOP");
-                    startService(intent);
-                    Snackbar.make(view, "Accelerometer Log Stopped.", Snackbar.LENGTH_LONG).show();
+                    GetAccData.uploaded = false;
+                    GetAccData.filename = vehicleName.replace(" ","") + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+                    try {
+                        String state = Environment.getExternalStorageState();
+                        if (Environment.MEDIA_MOUNTED.equals(state)) {
+                            File file = getExternalFilesDir("SafetyFirstData");
+                            File file2 = new File(file, GetAccData.filename);
+                            FileOutputStream out = new FileOutputStream(file2);
+                            for (int i = 0; i < GetAccData.data.size(); i++) {
+                                out.write(((Float[]) GetAccData.data.get(i))[0].toString().getBytes());
+                                out.write(",".getBytes());
+                                out.write(((Float[]) GetAccData.data.get(i))[1].toString().getBytes());
+                                out.write(",".getBytes());
+                                out.write(((Float[]) GetAccData.data.get(i))[2].toString().getBytes());
+                                out.write(",".getBytes());
+                                out.write(((Float[]) GetAccData.data.get(i))[3].toString().getBytes());
+                                out.write("\n".getBytes());
+                            }
+                            out.close();
+                        }
+                    } catch (Exception e) {
+                        Snackbar.make(view, "Stop failed. Could not save file to storage.", Snackbar.LENGTH_LONG).show();
+                    }
+                    Snackbar.make(view, "Accelerometer Log Stopped. File Saved to Storage.", Snackbar.LENGTH_LONG).show();
                 }else{
                     if(GetAccData.finished)
                         Snackbar.make(view, "Already Stopped", Snackbar.LENGTH_LONG).show();
@@ -114,63 +133,52 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
         mUpload.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (GetAccData.finished) {
+            public void onClick(final View view) {
+                if (GetAccData.finished && !GetAccData.started && !GetAccData.uploaded) {
                     GetAccData.started = false;
                     GetAccData.finished = false;
+                    GetAccData.uploaded=true;
                     //upload here
                     Snackbar.make(view,"Uploading Accelerometer Log.",Snackbar.LENGTH_LONG).show();
-                    String filename = vehicleName.replace(" ","") + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
-                    try {
-                        String state = Environment.getExternalStorageState();
-                        if (Environment.MEDIA_MOUNTED.equals(state)) {
-                            File file = getExternalFilesDir("SafetyFirstData");
-                            File file2=new File(file,filename);
-                            FileOutputStream out = new FileOutputStream(file2);
-                            for(int i=0;i<GetAccData.data.size();i++) {
-                                out.write(((Float[])GetAccData.data.get(i))[0].toString().getBytes());
-                                out.write(",".getBytes());
-                                out.write(((Float[])GetAccData.data.get(i))[1].toString().getBytes());
-                                out.write(",".getBytes());
-                                out.write(((Float[])GetAccData.data.get(i))[2].toString().getBytes());
-                                out.write(",".getBytes());
-                                out.write(((Float[])GetAccData.data.get(i))[3].toString().getBytes());
-                                out.write("\n".getBytes());
-                            }
-                            out.close();
-
+                    File file = getExternalFilesDir("SafetyFirstData");
+                    File file2 = new File(file, GetAccData.filename);
                             RequestParams params = new RequestParams();
                             try {
                                 params.put("file", file2);
-                            } catch(FileNotFoundException e) {}
+                            } catch(FileNotFoundException e){
+                                Snackbar.make(view, "Cannot upload. File not found.", Snackbar.LENGTH_LONG).show();
+                            }
 
                             AsyncHttpClient client = new AsyncHttpClient();
                             AsyncHttpResponseHandler responseHandler = new AsyncHttpResponseHandler() {
                                 @Override
                                 public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
                                     Log.d("post","HTTP Response = "+new String(responseBody));
-                                    if(responseBody.length==8)
-                                        Snackbar.make(mainView,"Upload Successful",Snackbar.LENGTH_LONG).show();
-                                    else
-                                        Snackbar.make(mainView,"Upload Error",Snackbar.LENGTH_LONG).show();
+                                    if(responseBody.length==8) {
+                                        Snackbar.make(view, "Upload Successful", Snackbar.LENGTH_LONG).show();
+                                        GetAccData.successful = true;
+                                        GetAccData.data.clear();
+                                    }else {
+                                        Snackbar.make(view, "Upload Error. File too big probably.", Snackbar.LENGTH_LONG).show();
+                                        GetAccData.finished=true;
+                                        GetAccData.uploaded=false;
+                                    }
                                 }
 
                                 @Override
                                 public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
                                     Log.e("post",error.toString());
-                                    Snackbar.make(mainView,"Upload Failed",Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(view,"Upload Failed. Check your internet connection.",Snackbar.LENGTH_LONG).show();
+                                    GetAccData.finished=true;
+                                    GetAccData.uploaded=false;
                                 }
                             };
                             client.post("http://safetyfirst.pe.hu/upload.php", params, responseHandler);
-                        }
-                    } catch (Exception e) {
-                        Log.d("External Public","error in saving");
-                    }
-
-                    //clear
-                    GetAccData.data.clear();
                 }else{
-                    Snackbar.make(view, "Cannot Upload, No Data Found.", Snackbar.LENGTH_LONG).show();
+                    if(GetAccData.started)
+                        Snackbar.make(view, "You need to stop before uploading.", Snackbar.LENGTH_LONG).show();
+                    else if(GetAccData.uploaded)
+                        Snackbar.make(view, "Already uploaded", Snackbar.LENGTH_LONG).show();
                 }
             }
         });

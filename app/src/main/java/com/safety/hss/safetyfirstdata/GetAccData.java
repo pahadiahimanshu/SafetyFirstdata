@@ -24,8 +24,8 @@ public class GetAccData extends IntentService implements SensorEventListener {
 
     public static ArrayList<Float[]> data = new ArrayList<Float[]>();
     public static int currentAccuracy;
-
-    public static boolean started=false, finished = false;
+    public static String filename;
+    public static boolean started=false, finished = false, uploaded = true, successful = true;
 
 
     @Override
@@ -34,7 +34,7 @@ public class GetAccData extends IntentService implements SensorEventListener {
             final String action = intent.getAction();
             if (ACTION_COLLECT.equals(action)) {
                 handleActionCollect();
-                while (started){
+                while (!successful){
                     try {
                         Thread.sleep(1000);
                     } catch (Exception e) {
